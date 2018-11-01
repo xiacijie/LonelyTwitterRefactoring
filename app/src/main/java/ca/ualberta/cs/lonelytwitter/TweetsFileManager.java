@@ -14,6 +14,7 @@ import android.util.Log;
 
 public class TweetsFileManager {
 
+	public static final String FILE_SAV = "file.sav";
 	private Context ctx;
 
 	public TweetsFileManager(Context ctx) {
@@ -21,17 +22,17 @@ public class TweetsFileManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<NormalLonelyTweet> loadTweets() {
-		List<NormalLonelyTweet> tweets = new ArrayList<NormalLonelyTweet>();
+	public List<LonleyTweet> loadTweets() {
+		List<LonleyTweet> tweets = new ArrayList<LonleyTweet>();
 
 		try {
-			FileInputStream fis = ctx.openFileInput("file.sav");
+			FileInputStream fis = ctx.openFileInput(FILE_SAV);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 
 			Object o = ois.readObject();
 
 			if (o instanceof ArrayList) {
-				tweets = (ArrayList<NormalLonelyTweet>) o;
+				tweets = (ArrayList<LonleyTweet>) o;
 			} else {
 				Log.i("LonelyTwitter", "Error casting");
 			}
@@ -47,9 +48,9 @@ public class TweetsFileManager {
 		return tweets;
 	}
 
-	public void saveTweets(List<NormalLonelyTweet> tweets) {
+	public void saveTweets(List<LonleyTweet> tweets) {
 		try {
-			FileOutputStream fos = ctx.openFileOutput("file.sav", 0);
+			FileOutputStream fos = ctx.openFileOutput(FILE_SAV, 0);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 
 			oos.writeObject(tweets);

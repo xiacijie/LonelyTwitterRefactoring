@@ -16,8 +16,12 @@ public class LonelyTwitterActivity extends Activity {
 	private EditText bodyText;
 	private ListView oldTweetsList;
 
-	private List<NormalLonelyTweet> tweets;
-	private ArrayAdapter<NormalLonelyTweet> adapter;
+	public List<LonleyTweet> getTweets() {
+		return tweets;
+	}
+
+	private List<LonleyTweet> tweets;
+	private ArrayAdapter<LonleyTweet> adapter;
 	private TweetsFileManager tweetsProvider;
 
 	@Override
@@ -35,7 +39,7 @@ public class LonelyTwitterActivity extends Activity {
 
 		tweetsProvider = new TweetsFileManager(this);
 		tweets = tweetsProvider.loadTweets();
-		adapter = new ArrayAdapter<NormalLonelyTweet>(this, R.layout.list_item,
+		adapter = new ArrayAdapter<LonleyTweet>(this, R.layout.list_item,
 				tweets);
 		oldTweetsList.setAdapter(adapter);
 	}
@@ -43,12 +47,12 @@ public class LonelyTwitterActivity extends Activity {
 	public void save(View v) {
 		String text = bodyText.getText().toString();
 
-		NormalLonelyTweet tweet;
+		LonleyTweet tweet;
 
-		tweet = new NormalLonelyTweet(text, new Date());
+		tweet = new LonleyTweet(text, new Date());
 
 		//TODO: use different sub-classes (Normal or Important) based on usage of "*" in the text.
-		
+		tweet = getNormalImportantLonleyTweet(text);
 		if (tweet.isValid()) {
 			tweets.add(tweet);
 			adapter.notifyDataSetChanged();
@@ -58,6 +62,17 @@ public class LonelyTwitterActivity extends Activity {
 		} else {
 			Toast.makeText(this, "Invalid tweet", Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	private LonleyTweet getNormalImportantLonleyTweet(String text) {
+		LonleyTweet tweet;
+		if (text.contains("*")){
+			tweet = new LonleyTweet(text, new Date());
+		}
+		else{
+			tweet = new LonleyTweet(text, new Date());
+		}
+		return tweet;
 	}
 
 	public void clear(View v) {
